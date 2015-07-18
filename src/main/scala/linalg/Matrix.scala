@@ -54,13 +54,26 @@ trait MatrixBinOps[T] {
 }
 
 trait Matrix[T] {
-  def data: List[Row[T]]
-  def zeros(m: Int)(implicit ev: Numeric[T]): Matrix[T]
-  def zeros(m: Int, n: Int)(implicit ev: Numeric[T]): Matrix[T]
+  def data: List[List[T]]
+  def _transpose(ll: List[List[T]]): List[List[T]]
+  def transpose(): Matrix[T]
 }
 
 object Matrix {
-  private class MatrixImpl[@specialized(Double, Int, Float, Long)T](val data: List[Row[T]]) extends Matrix[T] with MatrixBinOps[T] {
+
+  def apply[T](args: List[T]*): Matrix[T] = new MatrixImpl(args.toList)
+  def map[T](rowCount:Int, colCount:Int)(f:(Int,Int) => T) =
+      (
+        for(i <- 1 to rowCount) yield
+        (for(j <- 1 to colCount) yield f(i,j)).toList
+      ).toList
+
+  def zeros[T](m: Int)(implicit em: Numeric[T]): Matrix[T] = new MatrixImpl(List.fill(m)(List.fill(m)(em.zero)))
+  def zeros[T](m: Int, n: Int)(implicit ev: Numeric[T]): Matrix[T] = new MatrixImpl(List.fill(m)(List.fill(n)(ev.zero)))
+
+  def identity[T](m: Int)(implicit em: Numeric[T]): Matrix[T] = new MatrixImpl(Matrix.map(m , m) {(i: Int, j: Int) => if (i == j) em.one else em.zero })
+
+  private class MatrixImpl[@specialized(Double, Int, Float, Long) T](val _data: List[List[T]]) extends Matrix[T] with MatrixBinOps[T] {
 
     def +(that: Matrix[T])(implicit em: Numeric[T]): Matrix[T] =
       new MatrixImpl((this.data, that.data).zipped.map((v1, v2) => (v1, v2).zipped.map(_ + _)))
@@ -71,7 +84,11 @@ object Matrix {
     def *(that: Matrix[T])(implicit em: Numeric[T]): Matrix[T] =
       new MatrixImpl((this.data, that.data).zipped.map((v1, v2) => (v1, v2).zipped.map(_ + _)))
 
-    def zeros(m: Int)(implicit ev: Numeric[T]): Matrix[T] = new MatrixImpl(List.fill(m)(List.fill(m)(ev.zero)))
-    def zeros(m: Int, n: Int)(implicit ev: Numeric[T]): Matrix[T] = new MatrixImpl(List.fill(m)(List.fill(n)(ev.zero)))
+    def _transpose(ll: List[List[T]]): List[List[T]] = if (ll.head.isEmpty) Nil else ll.map(_.head) :: _transpose(ll.map(_.tail))
+    def transpose(): Matrix[T] = new MatrixImpl[T](_transpose(_data))
+
+    def data: List[List[T]] = _data
+
+    override def toString: String = "Matrix" + data.mkString("[", ",\n       ", "]").replace("List", "")
   }
 }

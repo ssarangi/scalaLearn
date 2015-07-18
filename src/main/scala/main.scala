@@ -11,6 +11,12 @@ object scalaLearnApp extends App {
 
     // Try the vector
     val b = Vector(1, 2, 3, 4)
+    val m = Matrix(List(1, 2, 3), List(4, 5, 6), List(7, 8, 9))
+
+    println(m)
+    println(m.transpose)
+    // println(m)
+    // println(m.transpose)
 
     // Main Entry function
     val training_data_theta0 = 1
