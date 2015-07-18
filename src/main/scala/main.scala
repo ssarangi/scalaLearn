@@ -1,7 +1,7 @@
 import TrainingData.Generate
 // import RegressionClassifier.LinearRegressionClassifier
 import breeze.linalg.DenseMatrix
-import linalg._
+import linalg.{Vector, Matrix}
 
 /**
  * Created by sarangis on 7/12/15.
@@ -14,7 +14,12 @@ object scalaLearnApp extends App {
     val m = Matrix(List(1, 2, 3), List(4, 5, 6), List(7, 8, 9))
 
     println(m)
-    println(m.transpose)
+
+    val b1 = m.row(0)
+    val c1 = m.col(2)
+    println(b1)
+    println(c1)
+
     // println(m)
     // println(m.transpose)
 

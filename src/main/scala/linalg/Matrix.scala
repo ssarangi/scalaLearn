@@ -1,7 +1,6 @@
 package linalg
 
 import linalg.LinAlgTypes.Row
-import linalg.Vector._
 
 /**
  * Created by sarangis on 7/13/15.
@@ -57,6 +56,8 @@ trait Matrix[T] {
   def data: List[List[T]]
   def _transpose(ll: List[List[T]]): List[List[T]]
   def transpose(): Matrix[T]
+  def row(i: Int)(implicit ev: Numeric[T]): Vector[T]
+  def col(i: Int)(implicit ev: Numeric[T]): Vector[T]
 }
 
 object Matrix {
@@ -86,6 +87,9 @@ object Matrix {
 
     def _transpose(ll: List[List[T]]): List[List[T]] = if (ll.head.isEmpty) Nil else ll.map(_.head) :: _transpose(ll.map(_.tail))
     def transpose(): Matrix[T] = new MatrixImpl[T](_transpose(_data))
+
+    def row(i: Int)(implicit ev: Numeric[T]): Vector[T] = Vector[T](this.data(i))
+    def col(i: Int)(implicit ev: Numeric[T]): Vector[T] = Vector[T](_transpose(this.data)(i))
 
     def data: List[List[T]] = _data
 
