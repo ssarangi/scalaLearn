@@ -1,10 +1,11 @@
 package RegressionClassifier
 
-import CostFunction.CostFunctions._
+// import CostFunction.CostFunctions._
 
 /**
  * Created by sarangis on 7/11/15.
  */
+/*
 abstract class RegressionClassifier extends Classifier {
   def fit_model() : Unit = {
 
@@ -22,3 +23,4 @@ abstract class RegressionClassifier extends Classifier {
     }
   }
 }
+*/

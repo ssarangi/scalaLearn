@@ -1,5 +1,6 @@
 package CostFunction
 
+/*
 object CostFunctions {
   def SingleVariableLinearRegressionCostFunc(theta0: Double, theta1: Double, x: Double): Double = {
     // This is a line equation
@@ -22,3 +23,4 @@ object CostFunctions {
     hypothesis.sum
   }
 }
+*/

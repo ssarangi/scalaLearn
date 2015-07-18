@@ -9,8 +9,7 @@ import scala.specialized
 import Numeric.Implicits._
 import Fractional.Implicits._
 
-
-trait BinOps[T] {
+trait VectorBinOps[T] {
   def +(that: Vector[T])(implicit ev: Numeric[T]): Vector[T]
   def -(that: Vector[T])(implicit ev: Numeric[T]): Vector[T]
   def *(that: Vector[T])(implicit ev: Numeric[T]): Vector[T]
@@ -20,6 +19,7 @@ trait BinOps[T] {
 trait Vector[T] {
   def toList(): List[T]
   def zeros(length: Int)(implicit ev: Numeric[T]): Vector[T]
+  def toString(): String
 }
 
 
@@ -28,7 +28,7 @@ object Vector {
 
   private class VectorImpl[@specialized(Double, Int, Float, Long)T](val _data: List[T])
     extends Vector[T]
-    with BinOps[T] {
+    with VectorBinOps[T] {
     def +(that: Vector[T])(implicit ev: Numeric[T]): Vector[T] = new VectorImpl[T](_data.zip(that).map(elem => elem._1 + elem._2))
     def -(that: Vector[T])(implicit ev: Numeric[T]): Vector[T] = new VectorImpl[T](_data.zip(that).map(elem => elem._1 - elem._2))
     def *(that: Vector[T])(implicit ev: Numeric[T]): Vector[T] = new VectorImpl[T](_data.zip(that).map(elem => elem._1 * elem._2))
@@ -36,7 +36,9 @@ object Vector {
 
     def fill(length: Int, value: T): Vector[T] = new VectorImpl[T](List.fill[T](length)(value))
     def zeros(length: Int)(implicit ev: Numeric[T]): Vector[T] = fill(length, ev.zero)
-    def toList(): List[T] = _data.toList
+    def toList(): List[T] = _data
+
+    override def toString(): String = "Vector(" + _data.mkString(" , ") + ")"
   }
 
   implicit def VectorToList[T](v: Vector[T]): List[T] = v.toList

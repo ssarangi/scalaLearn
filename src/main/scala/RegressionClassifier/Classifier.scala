@@ -3,6 +3,8 @@ package RegressionClassifier
 /**
  * Created by sarangis on 7/11/15.
  */
+
+/*
 trait Classifier {
   def fit_model() : Unit
   def predict() : Array[Double]
@@ -10,3 +12,4 @@ trait Classifier {
   def cost_function() : Double
   def gradient_descent() : Unit
 }
+*/
