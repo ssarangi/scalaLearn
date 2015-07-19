@@ -1,0 +1,6 @@
+language: scala
+install:
+  - sudo pip install pygments
+  - gem install jekyll
+scala:
+   - 2.11.7
