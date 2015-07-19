@@ -16,9 +16,10 @@ trait VectorBinOps[T] {
   def /(that: Vector[T])(implicit ev: Fractional[T]): Vector[T]
 }
 
-trait Vector[T] {
+trait Vector[T] extends VectorBinOps[T] {
   def toList(): List[T]
   def toString(): String
+  def dot(that: Vector[T])(implicit ev: Numeric[T]): T
 }
 
 object Vector {
@@ -28,12 +29,13 @@ object Vector {
   def zeros[T](length: Int)(implicit ev: Numeric[T]): Vector[T] = new VectorImpl[T](List.fill(length)(ev.zero))
 
   private class VectorImpl[@specialized(Double, Int, Float, Long)T](val _data: List[T])
-    extends Vector[T]
-    with VectorBinOps[T] {
+    extends Vector[T] {
     def +(that: Vector[T])(implicit ev: Numeric[T]): Vector[T] = new VectorImpl[T](_data.zip(that).map(elem => elem._1 + elem._2))
     def -(that: Vector[T])(implicit ev: Numeric[T]): Vector[T] = new VectorImpl[T](_data.zip(that).map(elem => elem._1 - elem._2))
     def *(that: Vector[T])(implicit ev: Numeric[T]): Vector[T] = new VectorImpl[T](_data.zip(that).map(elem => elem._1 * elem._2))
     def /(that: Vector[T])(implicit ev: Fractional[T]): Vector[T] = new VectorImpl[T](_data.zip(that).map(elem => elem._1 / elem._2))
+
+    def dot(that: Vector[T])(implicit ev: Numeric[T]): T = this._data.zip(that).map(el => el._1 * el._2).reduceLeft(_ + _)
 
     override def toList: List[T] = this._data.toList
     override def toString: String = "Vector(" + _data.mkString(" , ") + ")"

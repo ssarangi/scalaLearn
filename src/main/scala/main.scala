@@ -11,14 +11,14 @@ object scalaLearnApp extends App {
 
     // Try the vector
     val b = Vector(1, 2, 3, 4)
+    val b1 = Vector(4, 5, 6, 7)
+
+    val hh = b1 + b
+
     val m = Matrix(List(1, 2, 3), List(4, 5, 6), List(7, 8, 9))
 
-    println(m)
-
-    val b1 = m.row(0)
-    val c1 = m.col(2)
-    println(b1)
-    println(c1)
+    val m1 = m.add_row(List(Vector(10, 11, 12).toList))
+    val m2 = m.add_col(List(List(10, 11, 12)))
 
     // println(m)
     // println(m.transpose)
