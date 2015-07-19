@@ -17,8 +17,8 @@ object scalaLearnApp extends App {
 
     val m = Matrix(List(1, 2, 3), List(4, 5, 6), List(7, 8, 9))
 
-    val m1 = m.add_row(List(Vector(10, 11, 12).toList))
-    val m2 = m.add_col(List(List(10, 11, 12)))
+    val m1 = m.add_row(Vector(10, 11, 12))
+    val m2 = m.add_col(Vector(10, 11, 12))
 
     // println(m)
     // println(m.transpose)
