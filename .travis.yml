@@ -1,6 +1,9 @@
 language: scala
-install:
-  - sudo pip install pygments
-  - gem install jekyll
+
+sudo: false
+
 scala:
    - 2.11.7
+   
+script:
+   sbt ++$TRAVIS_SCALA_VERSION compile
