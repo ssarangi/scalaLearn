@@ -9,25 +9,13 @@ import linalg.{Vector, Matrix}
 object scalaLearnApp extends App {
   def main(): Unit = {
 
-    // Try the vector
-    val b = Vector(1, 2, 3, 4)
-    val b1 = Vector(4, 5, 6, 7)
-
-    val hh = b1 + b
-
-    val m = Matrix(List(1, 2, 3), List(4, 5, 6), List(7, 8, 9))
-
-    val m1 = m.add_row(Vector(10, 11, 12))
-    val m2 = m.add_col(Vector(10, 11, 12))
-
-    // println(m)
-    // println(m.transpose)
-
+    val test = Vector(1, 2, 3, 4)
+    val l = test.length
     // Main Entry function
     val training_data_theta0 = 1
-    val training_data_theta1 = 1
+    val training_data_theta1 = 2
 
-    val training_data: DenseMatrix[Double] = Generate.line_data(training_data_theta0, training_data_theta1)
+    val training_data: Matrix[Double] = Generate.line_data(training_data_theta0, training_data_theta1)
     println(s"Running Linear Regression with initial parameters: $training_data_theta0, $training_data_theta1")
 
     println("Training Data:")
