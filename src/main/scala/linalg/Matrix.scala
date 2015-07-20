@@ -1,3 +1,28 @@
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2015 Satyajit Sarangi
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ */
+
 package linalg
 
 import linalg.LinAlgTypes.Row
@@ -63,6 +88,9 @@ trait Matrix[T] extends MatrixBinOps[T] {
   def add_row(v: Vector[T]): Matrix[T]
   def add_col(v: Vector[T]): Matrix[T]
 
+  def rows: Int
+  def cols: Int
+
   def toList: List[List[T]]
 }
 
@@ -71,18 +99,21 @@ object Matrix {
   def apply[T](args: List[T]*): Matrix[T] = new MatrixImpl(args.toList)
   def empty[T]: Matrix[T] = new MatrixImpl[T](Nil)
 
-  def map[T](rowCount:Int, colCount:Int)(f:(Int,Int) => T) =
-      (
-        for(i <- 1 to rowCount) yield
-        (for(j <- 1 to colCount) yield f(i,j)).toList
-      ).toList
-
   def zeros[T](m: Int)(implicit em: Numeric[T]): Matrix[T] = new MatrixImpl(List.fill(m)(List.fill(m)(em.zero)))
   def zeros[T](m: Int, n: Int)(implicit ev: Numeric[T]): Matrix[T] = new MatrixImpl(List.fill(m)(List.fill(n)(ev.zero)))
 
   def identity[T](m: Int)(implicit em: Numeric[T]): Matrix[T] = new MatrixImpl(Matrix.map(m , m) {(i: Int, j: Int) => if (i == j) em.one else em.zero })
 
+  def map[T](rowCount:Int, colCount:Int)(f:(Int,Int) => T) =
+    (
+      for(i <- 1 to rowCount) yield
+      (for(j <- 1 to colCount) yield f(i,j)).toList
+      ).toList
+
   private class MatrixImpl[@specialized(Double, Int, Float, Long) T](val _data: List[List[T]]) extends Matrix[T] {
+    val rows: Int = if (_data.isEmpty || _data.head.isEmpty) 0 else _data.length
+    val cols: Int = if (_data.isEmpty || _data.head.isEmpty) 0 else _data.head.length
+
     def isEmpty: Boolean = _data.isEmpty
 
     def +(that: Matrix[T])(implicit em: Numeric[T]): Matrix[T] =
@@ -111,6 +142,12 @@ object Matrix {
 
     def insert_col(col_to_insert: Int, v: Vector[T]): Matrix[T] = new MatrixImpl[T](_insert_col(0, col_to_insert, v, _data)).transpose
     def insert_row(row_to_insert: Int, v: Vector[T]): Matrix[T] = new MatrixImpl[T](_insert_col(0, row_to_insert, v, this.transpose))
+
+    def map[T]()(f:(Int,Int) => T) =
+      (
+        for(i <- 1 to this.rows) yield
+        (for(j <- 1 to this.cols) yield f(i,j)).toList
+        ).toList
 
     def toList: List[List[T]] = _data
 
