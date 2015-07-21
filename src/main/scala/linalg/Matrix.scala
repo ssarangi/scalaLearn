@@ -80,13 +80,13 @@ trait MatrixBinOps[T] {
 trait Matrix[T] extends MatrixBinOps[T] {
   def isEmpty: Boolean
   def transpose: Matrix[T]
-  def row(i: Int)(implicit ev: Numeric[T]): Vector[T]
-  def col(i: Int)(implicit ev: Numeric[T]): Vector[T]
-  def insert_row(col_to_insert: Int, v: Vector[T]): Matrix[T]
-  def insert_col(col_to_insert: Int, v: Vector[T]): Matrix[T]
+  def row(i: Int)(implicit ev: Numeric[T]): List[T]
+  def col(i: Int)(implicit ev: Numeric[T]): List[T]
+  def insert_row(col_to_insert: Int, v: List[T]): Matrix[T]
+  def insert_col(col_to_insert: Int, v: List[T]): Matrix[T]
 
-  def add_row(v: Vector[T]): Matrix[T]
-  def add_col(v: Vector[T]): Matrix[T]
+  def add_row(v: List[T]): Matrix[T]
+  def add_col(v: List[T]): Matrix[T]
 
   def rows: Int
   def cols: Int
@@ -125,23 +125,23 @@ object Matrix {
     def *(that: Matrix[T])(implicit em: Numeric[T]): Matrix[T] =
       new MatrixImpl((this, that.transpose).zipped.map((v1, v2) => (v1, v2).zipped.map(_ + _)))
 
-    def _transpose(ll: List[List[T]]): List[List[T]] = if (ll.isEmpty || ll.head.isEmpty) Nil else ll.map(_.head) :: _transpose(ll.map(_.tail))
+    private def _transpose(ll: List[List[T]]): List[List[T]] = if (ll.isEmpty || ll.head.isEmpty) Nil else ll.map(_.head) :: _transpose(ll.map(_.tail))
     def transpose(): Matrix[T] = new MatrixImpl[T](_transpose(_data))
 
-    def add_row(v: Vector[T]): Matrix[T] = new MatrixImpl[T](if (isEmpty) List(v.toList) else this ++ List(v.toList))
-    def add_col(v: Vector[T]): Matrix[T] = new MatrixImpl[T](this.transpose ++ List(v.toList)).transpose
+    def add_row(v: List[T]): Matrix[T] = new MatrixImpl[T](if (isEmpty) List(v.toList) else this ++ List(v.toList))
+    def add_col(v: List[T]): Matrix[T] = new MatrixImpl[T](this.transpose ++ List(v.toList)).transpose
 
-    def row(i: Int)(implicit ev: Numeric[T]): Vector[T] = Vector[T](_data(i))
-    def col(i: Int)(implicit ev: Numeric[T]): Vector[T] = Vector[T](_transpose(_data)(i))
+    def row(i: Int)(implicit ev: Numeric[T]): List[T] = _data(i)
+    def col(i: Int)(implicit ev: Numeric[T]): List[T] = _transpose(_data)(i)
 
-    def _insert_col(start_col: Int, col_to_insert: Int, v: List[T], ll: List[List[T]]): List[List[T]] = {
+    private def _insert_col(start_col: Int, col_to_insert: Int, v: List[T], ll: List[List[T]]): List[List[T]] = {
       if (ll.head.isEmpty) Nil
       else if (start_col == col_to_insert) v :: ll.map(_.head) :: _insert_col(start_col + 1, col_to_insert, v, ll.map(_.tail))
       else ll.map(_.head) :: _insert_col(start_col + 1, col_to_insert, v, ll.map(_.tail))
     }
 
-    def insert_col(col_to_insert: Int, v: Vector[T]): Matrix[T] = new MatrixImpl[T](_insert_col(0, col_to_insert, v, _data)).transpose
-    def insert_row(row_to_insert: Int, v: Vector[T]): Matrix[T] = new MatrixImpl[T](_insert_col(0, row_to_insert, v, this.transpose))
+    def insert_col(col_to_insert: Int, v: List[T]): Matrix[T] = new MatrixImpl[T](_insert_col(0, col_to_insert, v, _data)).transpose
+    def insert_row(row_to_insert: Int, v: List[T]): Matrix[T] = new MatrixImpl[T](_insert_col(0, row_to_insert, v, this.transpose))
 
     def map[T]()(f:(Int,Int) => T) =
       (

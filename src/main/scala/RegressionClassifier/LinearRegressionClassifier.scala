@@ -26,7 +26,7 @@
 package RegressionClassifier
 
 import linalg.{Vector, Matrix}
-import CostFunction.CostFunctions.linear_regression_hypothesis_func
+import HypothesisFunctions.CostFunctions.linear_regression_hypothesis_func
 
 /**
  * Created by sarangis on 7/11/15.

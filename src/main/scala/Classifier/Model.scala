@@ -32,5 +32,4 @@ import linalg.Vector
  */
 trait Model {
   def predict: Double
-  def create(v: Vector[Double]): Model
 }

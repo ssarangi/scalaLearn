@@ -23,15 +23,16 @@
  *
  */
 
-package CostFunction
+package HypothesisFunctions
 
 import linalg.{Vector, Matrix}
+import linalg.RichListObject._
 
 object CostFunctions {
 
-  def linear_regression_hypothesis_func(theta: Vector[Double], x: Vector[Double]) : Double = {
+  def linear_regression_hypothesis_func(theta: List[Double], x: List[Double]) : Double = {
     // This is a line/plane equation
-    val hypothesis: Vector[Double] = theta * x
+    val hypothesis: List[Double] = theta * x
     hypothesis.sum
   }
 }

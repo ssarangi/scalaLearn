@@ -31,7 +31,6 @@ import linalg.Vector
 /**
  * Created by sarangis on 7/19/15.
  */
-class LinearRegressionModel(val theta: Vector[Double]) extends Model {
+class LinearRegressionModel(val theta: List[Double]) extends Model {
   def predict: Double = 0.0
-  def create(v: Vector[Double]): LinearRegressionModel = new LinearRegressionModel(v)
 }
