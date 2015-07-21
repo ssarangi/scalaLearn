@@ -70,7 +70,6 @@ object Matrix {
 */
 
 import Numeric.Implicits._
-import linalg.Vector._
 
 trait MatrixBinOps[T] {
   def +(that: Matrix[T])(implicit em: Numeric[T]): Matrix[T]

@@ -28,10 +28,12 @@ import TrainingData.Generate
 // import RegressionClassifier.LinearRegressionClassifier
 import breeze.linalg.DenseMatrix
 import linalg.{Vector, Matrix}
+import linalg.RichListObject._
 
 /**
  * Created by sarangis on 7/12/15.
  */
+
 object scalaLearnApp extends App {
   def main(): Unit = {
 
