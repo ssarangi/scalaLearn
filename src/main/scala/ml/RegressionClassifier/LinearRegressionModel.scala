@@ -23,16 +23,14 @@
  *
  */
 
-package HypothesisFunctions
+package ml.RegressionClassifier
 
-import linalg.{Vector, Matrix}
-import linalg.RichListObject._
+import ml.Classifier.Model
+import linalg.Vector
 
-object CostFunctions {
-
-  def linear_regression_hypothesis_func(theta: List[Double], x: List[Double]) : Double = {
-    // This is a line/plane equation
-    val hypothesis: List[Double] = theta * x
-    hypothesis.sum
-  }
+/**
+ * Created by sarangis on 7/19/15.
+ */
+class LinearRegressionModel(val theta: List[Double]) extends Model {
+  def predict: Double = 0.0
 }

@@ -23,14 +23,21 @@
  *
  */
 
-package RegressionClassifier
+package ml.RegressionClassifier
 
-import Classifier.Model
-import linalg.Vector
+import linalg.{Vector, Matrix}
+import ml.HypothesisFunctions.CostFunctions.linear_regression_hypothesis_func
 
 /**
- * Created by sarangis on 7/19/15.
+ * Created by sarangis on 7/11/15.
  */
-class LinearRegressionModel(val theta: List[Double]) extends Model {
-  def predict: Double = 0.0
+
+object LinearRegressionClassifier
+  extends RegressionClassifier {
+
+  def fit_model(training_data: Matrix[Double], initial_theta: Vector[Double], learning_rate: Double, threshold: Double, max_iterations: Int): LinearRegressionModel = {
+    val augmented_training_data = training_data.insert_col(1, Vector(List.fill[Double](training_data.rows)(1.0)))
+    super.fit_model(linear_regression_hypothesis_func, augmented_training_data, initial_theta, learning_rate, threshold, max_iterations)
+  }
+
 }

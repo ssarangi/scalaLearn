@@ -23,33 +23,13 @@
  *
  */
 
-package TrainingData
+package ml.Classifier
 
-import linalg.{Vector, Matrix}
-
-import scala.collection.immutable.NumericRange
+import linalg.Vector
 
 /**
- * Created by sarangis on 7/12/15.
+ * Created by sarangis on 7/19/15.
  */
-object Generate {
-  /** Generate line data for a bunch of points.
-    * @param theta0: Constant for line equation
-    * @param theta1: Constant which gets multiplied by x
-    * @return DenseMatrix[Double]: returns this matrix containing y, x
-   */
-  def line_data(theta0: Double, theta1: Double) : Matrix[Double] = {
-    val x: Vector[Double] = Vector((-100.0 to 100.0 by 50.0).toList)
-    val y_tmp: Vector[Double] = theta0 + theta1 * x
-
-    Matrix.empty[Double].add_col(y_tmp).add_col(x)
-  }
-
-  def plane_equation(theta0: Double, theta1: Double, theta2: Double): Matrix[Double] = {
-    implicit val n = 2.0
-    val x0: Vector[Double] = Vector(List.tabulate[Double](200)(n => 2 * n + 1))
-    val x1: Vector[Double] = Vector(List.tabulate[Double](200)(n => 2 * n - 1))
-    val y_tmp: Vector[Double] = theta0 + theta1 * x0 + theta2 * x1
-    Matrix.empty[Double].add_col(y_tmp).add_col(x0).add_col(x1)
-  }
+trait Model {
+  def predict: Double
 }

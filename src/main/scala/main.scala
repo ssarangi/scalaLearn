@@ -23,9 +23,9 @@
  *
  */
 
-import RegressionClassifier.LinearRegressionClassifier
-import TrainingData.Generate
-// import RegressionClassifier.LinearRegressionClassifier
+import ml.RegressionClassifier.LinearRegressionClassifier
+import ml.TrainingData.Generate
+// import ml.RegressionClassifier.LinearRegressionClassifier
 import breeze.linalg.DenseMatrix
 import linalg.{Vector, Matrix}
 import linalg.RichListObject._

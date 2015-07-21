@@ -23,21 +23,33 @@
  *
  */
 
-package RegressionClassifier
+package ml.TrainingData
 
 import linalg.{Vector, Matrix}
-import HypothesisFunctions.CostFunctions.linear_regression_hypothesis_func
+
+import scala.collection.immutable.NumericRange
 
 /**
- * Created by sarangis on 7/11/15.
+ * Created by sarangis on 7/12/15.
  */
+object Generate {
+  /** Generate line data for a bunch of points.
+    * @param theta0: Constant for line equation
+    * @param theta1: Constant which gets multiplied by x
+    * @return DenseMatrix[Double]: returns this matrix containing y, x
+   */
+  def line_data(theta0: Double, theta1: Double) : Matrix[Double] = {
+    val x: Vector[Double] = Vector((-100.0 to 100.0 by 50.0).toList)
+    val y_tmp: Vector[Double] = theta0 + theta1 * x
 
-object LinearRegressionClassifier
-  extends RegressionClassifier {
-
-  def fit_model(training_data: Matrix[Double], initial_theta: Vector[Double], learning_rate: Double, threshold: Double, max_iterations: Int): LinearRegressionModel = {
-    val augmented_training_data = training_data.insert_col(1, Vector(List.fill[Double](training_data.rows)(1.0)))
-    super.fit_model(linear_regression_hypothesis_func, augmented_training_data, initial_theta, learning_rate, threshold, max_iterations)
+    Matrix.empty[Double].add_col(y_tmp).add_col(x)
   }
 
+  def plane_equation(theta0: Double, theta1: Double, theta2: Double): Matrix[Double] = {
+    implicit val n = 2.0
+    val x0: Vector[Double] = Vector(List.tabulate[Double](200)(n => 2 * n + 1))
+    val x1: Vector[Double] = Vector(List.tabulate[Double](200)(n => 2 * n - 1))
+    val y_tmp: Vector[Double] = theta0 + theta1 * x0 + theta2 * x1
+    Matrix.empty[Double].add_col(y_tmp).add_col(x0).add_col(x1)
+  }
 }

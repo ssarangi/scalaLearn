@@ -23,12 +23,16 @@
  *
  */
 
-package Classifier
+package ml.HypothesisFunctions
 
-/**
- * Created by sarangis on 7/11/15.
- */
+import linalg.{Vector, Matrix}
+import linalg.RichListObject._
 
-trait Classifier[ModelType] {
-  def fit_model: ModelType
+object CostFunctions {
+
+  def linear_regression_hypothesis_func(theta: List[Double], x: List[Double]) : Double = {
+    // This is a line/plane equation
+    val hypothesis: List[Double] = theta * x
+    hypothesis.sum
+  }
 }

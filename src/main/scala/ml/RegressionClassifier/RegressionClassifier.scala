@@ -23,9 +23,9 @@
  *
  */
 
-package RegressionClassifier
+package ml.RegressionClassifier
 
-import Classifier.{Model, Classifier}
+import ml.Classifier.{Model, Classifier}
 import linalg.{Vector, Matrix}
 import linalg.RichListObject._
 

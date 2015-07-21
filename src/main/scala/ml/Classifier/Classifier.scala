@@ -23,13 +23,12 @@
  *
  */
 
-package Classifier
-
-import linalg.Vector
+package ml.Classifier
 
 /**
- * Created by sarangis on 7/19/15.
+ * Created by sarangis on 7/11/15.
  */
-trait Model {
-  def predict: Double
+
+trait Classifier[ModelType] {
+  def fit_model: ModelType
 }
