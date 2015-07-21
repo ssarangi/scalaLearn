@@ -23,40 +23,11 @@
  *
  */
 
-package ml.TrainingData
-
-import linalg.LinAlgTypes._
-import linalg.{Matrix, Vector}
-
+package ml.Optimizer
 
 /**
- * Created by sarangis on 7/12/15.
+ * Created by sarangis on 7/21/15.
  */
-object Generate {
-  /** Generate line data for a bunch of points.
-    * @param theta0: Constant for line equation
-    * @param theta1: Constant which gets multiplied by x
-    * @return DenseMatrix[Double]: returns this matrix containing y, x
-   */
-  def line_equation(theta0: Double, theta1: Double) : MatrixD = {
-    val x: VectorD = Vector[Double]((-100.0 to 100.0 by 50.0).toList)
-    val y_tmp: VectorD = theta0 + theta1 * x
+class Gradient {
 
-    Matrix.empty[Double].add_col(y_tmp).add_col(x)
-  }
-
-  /**
-   * Generate a plane equation from 3 parameters
-   * @param theta0
-   * @param theta1
-   * @param theta2
-   * @return
-   */
-  def plane_equation(theta0: Double, theta1: Double, theta2: Double): Matrix[Double] = {
-    implicit val n = 2.0
-    val x0: Vector[Double] = Vector(List.tabulate[Double](200)(n => 2 * n + 1))
-    val x1: Vector[Double] = Vector(List.tabulate[Double](200)(n => 2 * n - 1))
-    val y_tmp: Vector[Double] = theta0 + theta1 * x0 + theta2 * x1
-    Matrix.empty[Double].add_col(y_tmp).add_col(x0).add_col(x1)
-  }
 }

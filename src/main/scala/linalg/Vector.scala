@@ -88,6 +88,7 @@ object Vector {
   }
 
   implicit def VectorToList[T](v: Vector[T]): List[T] = v.toList
+  implicit def ListToVector[T](l: List[T]): Vector[T] = Vector[T](l)
   implicit class NumMulVector[T](val value: T) extends AnyVal {
     def +(vec: Vector[T])(implicit ev: Numeric[T]): Vector[T] = Vector(List.fill[T](vec.length)(value)) + vec
     def -(vec: Vector[T])(implicit ev: Numeric[T]): Vector[T] = Vector(List.fill[T](vec.length)(value)) - vec

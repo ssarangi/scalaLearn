@@ -23,6 +23,7 @@
  *
  */
 
+import linalg.LinAlgTypes.MatrixD
 import ml.RegressionClassifier.LinearRegressionClassifier
 import ml.TrainingData.Generate
 // import ml.RegressionClassifier.LinearRegressionClassifier
@@ -64,7 +65,7 @@ object scalaLearnApp extends App {
     val training_data_theta1 = 2
     val training_data_theta2 = 3
 
-    val training_data: Matrix[Double] = Generate.plane_equation(training_data_theta0, training_data_theta1, training_data_theta2)
+    val training_data: MatrixD = Generate.plane_equation(training_data_theta0, training_data_theta1, training_data_theta2)
     println(s"Running Linear Regression with initial parameters: $training_data_theta0, $training_data_theta1, $training_data_theta2")
     println("-" * 100)
 
@@ -79,7 +80,7 @@ object scalaLearnApp extends App {
     val threshold = 0.000001
     val max_iterations = 100000
 
-    LinearRegressionClassifier.fit_model(training_data, Vector(initial_theta0_guess, initial_theta1_guess, initial_theta2_guess), learning_rate, threshold, max_iterations)
+    LinearRegressionClassifier.fit_model(training_data, Vector[Double](initial_theta0_guess, initial_theta1_guess, initial_theta2_guess), learning_rate, threshold, max_iterations)
   }
 
   main()

@@ -25,6 +25,7 @@
 
 package ml.RegressionClassifier
 
+import linalg.LinAlgTypes.{MatrixD, VectorD}
 import ml.Classifier.{Model, Classifier}
 import linalg.{Vector, Matrix}
 import linalg.RichListObject._
@@ -35,7 +36,7 @@ import linalg.RichListObject._
 
 trait RegressionClassifier {
 
-  def cost_func(hypothesis_func: (List[Double], List[Double]) => Double, training_data: Matrix[Double], theta: List[Double]): Double = {
+  def cost_func(hypothesis_func: (VectorD, VectorD) => Double, training_data: MatrixD, theta: VectorD): Double = {
     val num_training_data  = training_data.rows.toDouble
 
     val y_training         = training_data.col(0)
@@ -56,7 +57,7 @@ trait RegressionClassifier {
    * @param learning_rate: Learning rate for the gradient descent
    * @param j: Compute for Theta_j'th value for this where j = number of parameters in the linear regression
    */
-  def derivative_cost_func(hypothesis_func: (List[Double], List[Double]) => Double, training_data: Matrix[Double], theta: List[Double], learning_rate: Double, j: Int): Double = {
+  def derivative_cost_func(hypothesis_func: (VectorD, VectorD) => Double, training_data: MatrixD, theta: VectorD, learning_rate: Double, j: Int): Double = {
     val num_training_data  = training_data.rows.toDouble
 
     val y_training         = training_data.col(0)
@@ -80,7 +81,7 @@ trait RegressionClassifier {
 
   import annotation.tailrec
 
-  @tailrec final def stochastic_gradient_descent(hypothesis_func: (List[Double], List[Double]) => Double, training_data: Matrix[Double], theta: List[Double], learning_rate: Double, threshold: Double, current_iteration: Int, max_iterations: Int): List[Double] = {
+  @tailrec final def stochastic_gradient_descent(hypothesis_func: (VectorD, VectorD) => Double, training_data: MatrixD, theta: VectorD, learning_rate: Double, threshold: Double, current_iteration: Int, max_iterations: Int): List[Double] = {
 
     val old_cost = cost_func(hypothesis_func, training_data, theta)
     val num_variables = training_data.cols - 1
@@ -97,7 +98,7 @@ trait RegressionClassifier {
       stochastic_gradient_descent(hypothesis_func, training_data, new_theta, (if (new_cost > old_cost) learning_rate / 10 else learning_rate), threshold, current_iteration + 1, max_iterations)
   }
 
-  def fit_model(hypothesis_func: (List[Double], List[Double]) => Double, training_data: Matrix[Double], theta: List[Double], learning_rate: Double, threshold: Double, max_iterations: Int): LinearRegressionModel = {
+  def fit_model(hypothesis_func: (VectorD, VectorD) => Double, training_data: MatrixD, theta: VectorD, learning_rate: Double, threshold: Double, max_iterations: Int): LinearRegressionModel = {
     val converged_theta = stochastic_gradient_descent(hypothesis_func, training_data, theta, learning_rate, threshold, 0, max_iterations)
     new LinearRegressionModel(converged_theta)
   }

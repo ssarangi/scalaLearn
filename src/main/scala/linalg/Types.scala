@@ -26,5 +26,6 @@
 package linalg
 
 package object LinAlgTypes {
-  type Row[T] = List[T]
+  type VectorD = Vector[Double]
+  type MatrixD = Matrix[Double]
 }
