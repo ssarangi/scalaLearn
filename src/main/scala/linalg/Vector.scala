@@ -52,6 +52,8 @@ trait Vector[T] extends VectorBinOps[T] {
   def drop(n: Int): Vector[T]
   def takeRight(n: Int): Vector[T]
   def slice(start: Int, until: Int): Vector[T]
+  def head: T
+  def tail: Vector[T]
 }
 
 object Vector {
@@ -59,6 +61,8 @@ object Vector {
   def apply[T](arg: List[T]): Vector[T] = new VectorImpl[T](arg)
 
   def zeros[T](length: Int)(implicit ev: Numeric[T]): Vector[T] = new VectorImpl[T](List.fill(length)(ev.zero))
+
+  def toString[T](v: VectorImpl[T]) = v.toString
 
   private class VectorImpl[@specialized(Double, Int, Float, Long)T](val _data: List[T])
     extends Vector[T] {
@@ -75,13 +79,15 @@ object Vector {
     def takeRight(n: Int): Vector[T] = new VectorImpl[T](this._data.takeRight(n))
     def slice(start: Int, until: Int): Vector[T] = new VectorImpl[T](this._data.slice(start, until))
 
+    def head: T = this._data.head
+    def tail: Vector[T] = Vector(this._data.tail)
+
     def length: Int = _data.length
     override def toList: List[T] = this._data.toList
     override def toString: String = "Vector(" + _data.mkString(" , ") + ")"
   }
 
   implicit def VectorToList[T](v: Vector[T]): List[T] = v.toList
-  // implicit def NumToVec[T](n: T, v: Vector[T]): Vector[T] = Vector(List.fill[T](v.length)(n))
   implicit class NumMulVector[T](val value: T) extends AnyVal {
     def +(vec: Vector[T])(implicit ev: Numeric[T]): Vector[T] = Vector(List.fill[T](vec.length)(value)) + vec
     def -(vec: Vector[T])(implicit ev: Numeric[T]): Vector[T] = Vector(List.fill[T](vec.length)(value)) - vec

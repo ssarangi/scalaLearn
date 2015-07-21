@@ -70,6 +70,7 @@ object Matrix {
 */
 
 import Numeric.Implicits._
+import linalg.Vector._
 
 trait MatrixBinOps[T] {
   def +(that: Matrix[T])(implicit em: Numeric[T]): Matrix[T]
@@ -135,7 +136,7 @@ object Matrix {
     def col(i: Int)(implicit ev: Numeric[T]): Vector[T] = Vector[T](_transpose(_data)(i))
 
     def _insert_col(start_col: Int, col_to_insert: Int, v: List[T], ll: List[List[T]]): List[List[T]] = {
-      if (ll.head.isEmpty) List(v)
+      if (ll.head.isEmpty) Nil
       else if (start_col == col_to_insert) v :: ll.map(_.head) :: _insert_col(start_col + 1, col_to_insert, v, ll.map(_.tail))
       else ll.map(_.head) :: _insert_col(start_col + 1, col_to_insert, v, ll.map(_.tail))
     }

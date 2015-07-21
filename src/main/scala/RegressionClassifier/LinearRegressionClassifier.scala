@@ -35,8 +35,9 @@ import CostFunction.CostFunctions.linear_regression_hypothesis_func
 object LinearRegressionClassifier
   extends RegressionClassifier {
 
-  def fit_model(training_data: Matrix[Double], initial_theta: Vector[Double]): LinearRegressionModel = {
-    super.fit_model(linear_regression_hypothesis_func, training_data, initial_theta)
+  def fit_model(training_data: Matrix[Double], initial_theta: Vector[Double], learning_rate: Double, threshold: Double, max_iterations: Int): LinearRegressionModel = {
+    val augmented_training_data = training_data.insert_col(1, Vector(List.fill[Double](training_data.rows)(1.0)))
+    super.fit_model(linear_regression_hypothesis_func, augmented_training_data, initial_theta, learning_rate, threshold, max_iterations)
   }
 
 }
