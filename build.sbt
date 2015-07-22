@@ -6,6 +6,16 @@ scalaVersion := "2.11.7"
 
 resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases"
 
+resolvers += Classpaths.sbtPluginReleases
+
+addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.0.4")
+
+addSbtPlugin("org.scoverage" % "sbt-coveralls" % "1.0.0")
+
+import org.scoverage.coveralls.Imports.CoverallsKeys._
+
+coverallsToken := Some("scalaLearn")
+
 libraryDependencies  ++= Seq(
   // other dependencies here
   "org.scalatest" % "scalatest_2.11" % "2.2.4" % "test",
