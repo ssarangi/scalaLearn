@@ -8,12 +8,14 @@ resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/release
 
 resolvers += Classpaths.sbtPluginReleases
 
-addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.0.4")
+ScoverageSbtPlugin.ScoverageKeys.coverageMinimum := 70
 
-addSbtPlugin("org.scoverage" % "sbt-coveralls" % "1.0.0")
+ScoverageSbtPlugin.ScoverageKeys.coverageFailOnMinimum := false
 
-import scoverage.coveralls.Imports.CoverallsKeys._
-import scoverage.ScoverageSbtPlugin.ScoverageKeys.coverage
+ScoverageSbtPlugin.ScoverageKeys.coverageHighlighting := {
+    if(scalaBinaryVersion.value == "2.11") true
+    else false
+}
 
 coverallsToken := Some("scalaLearn")
 
