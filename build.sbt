@@ -17,8 +17,6 @@ ScoverageSbtPlugin.ScoverageKeys.coverageHighlighting := {
     else false
 }
 
-coverallsToken := Some("scalaLearn")
-
 libraryDependencies  ++= Seq(
   // other dependencies here
   "org.scalatest" % "scalatest_2.11" % "2.2.4" % "test",
