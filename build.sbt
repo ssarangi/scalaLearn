@@ -6,11 +6,10 @@ scalaVersion := "2.11.7"
 
 resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases"
 
-libraryDependencies += "org.scalatest" % "scalatest_2.10" % "2.1.0" % "test"
-libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.3.12"
-
 libraryDependencies  ++= Seq(
   // other dependencies here
+  "org.scalatest" % "scalatest_2.11" % "2.2.4" % "test",
+  "com.typesafe.akka" %% "akka-actor" % "2.3.12",
   "org.scalanlp" %% "breeze" % "0.11.2",
   // native libraries are not included by default. add this if you want them (as of 0.7)
   // native libraries greatly improve performance, but increase jar sizes.

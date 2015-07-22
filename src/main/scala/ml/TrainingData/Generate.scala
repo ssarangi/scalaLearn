@@ -38,11 +38,13 @@ object Generate {
     * @param theta1: Constant which gets multiplied by x
     * @return DenseMatrix[Double]: returns this matrix containing y, x
    */
-  def line_equation(theta0: Double, theta1: Double) : MatrixD = {
-    val x: VectorD = Vector[Double]((-100.0 to 100.0 by 50.0).toList)
-    val y_tmp: VectorD = theta0 + theta1 * x
+  def line_equation(theta0: Double, theta1: Double) : RegressionTrainingData = {
+    val x0: VectorD = Vector[Double](List.fill[Double](200)(1.0))
+    val x1: VectorD = Vector[Double]((-100.0 until 100.0 by 1.0).toList)
+    val y: VectorD = theta0 * x0 + theta1 * x1
 
-    Matrix.empty[Double].add_col(y_tmp).add_col(x)
+    val x = Matrix.empty[Double].add_col(x0).add_col(x1)
+    new RegressionTrainingData(y, x)
   }
 
   /**
@@ -52,11 +54,13 @@ object Generate {
    * @param theta2
    * @return
    */
-  def plane_equation(theta0: Double, theta1: Double, theta2: Double): Matrix[Double] = {
+  def plane_equation(theta0: Double, theta1: Double, theta2: Double): RegressionTrainingData = {
     implicit val n = 2.0
-    val x0: Vector[Double] = Vector(List.tabulate[Double](200)(n => 2 * n + 1))
-    val x1: Vector[Double] = Vector(List.tabulate[Double](200)(n => 2 * n - 1))
-    val y_tmp: Vector[Double] = theta0 + theta1 * x0 + theta2 * x1
-    Matrix.empty[Double].add_col(y_tmp).add_col(x0).add_col(x1)
+    val x0 = Vector(List.fill[Double](200)(1.0))
+    val x1 = Vector(List.tabulate[Double](200)(n => 2 * n + 1))
+    val x2 = Vector(List.tabulate[Double](200)(n => 2 * n - 1))
+    val y:  VectorD = theta0 * x0 + theta1 * x1 + theta2 * x2
+    val x = Matrix.empty[Double].add_col(x0).add_col(x1).add_col(x2)
+    new RegressionTrainingData(y, x)
   }
 }

@@ -23,17 +23,23 @@
  *
  */
 
-package ml.HypothesisFunctions
+package ml.Optimizer
 
 import linalg.LinAlgTypes.VectorD
-import linalg.{Vector, Matrix}
-import linalg.RichListObject._
 
-object CostFunctions {
+/**
+ * Created by sarangis on 7/21/15.
+ */
 
-  def linear_regression_hypothesis_func(theta: VectorD, x: VectorD) : Double = {
-    // This is a line/plane equation
-    val hypothesis = theta * x
-    hypothesis.sum
+object Updater {
+  def SimpleUpdater(theta_old: VectorD,
+                   gradient: VectorD): VectorD = {
+    theta_old - gradient
   }
+
+  // The function type which needs to be passed to gradient descent
+  type UpdaterFunctorTy = (VectorD, VectorD) => VectorD
+
+  // Functors for use with Linear Regressions
+  val simpleUpdaterFunctor = SimpleUpdater _
 }

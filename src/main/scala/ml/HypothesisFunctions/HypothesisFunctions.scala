@@ -23,14 +23,20 @@
  *
  */
 
-package ml.Classifier
+package ml.HypothesisFunctions
 
 import linalg.LinAlgTypes.VectorD
+import linalg.{Vector, Matrix}
+import linalg.RichListObject._
 
-/**
- * Created by sarangis on 7/11/15.
- */
+object HypothesisFunctions {
 
-trait Classifier[ModelType, TrainingDataType] {
-  def train(training_data: TrainingDataType, initial_theta: VectorD): ModelType
+  def RegressionHypothesisFunction(theta: VectorD, x: VectorD): Double = {
+    // This is a line/plane equation
+    val hypothesis = theta * x
+    hypothesis.sum
+  }
+
+  type RegressionHypothesisFunctorTy = (VectorD, VectorD) => Double
+  val regressionHypothesisFunctor = RegressionHypothesisFunction _
 }

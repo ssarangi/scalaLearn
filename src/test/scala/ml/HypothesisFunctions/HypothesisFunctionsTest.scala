@@ -23,14 +23,16 @@
  *
  */
 
-package ml.Classifier
+package ml.HypothesisFunctions
 
-import linalg.LinAlgTypes.VectorD
+import org.scalatest.FunSuite
+import linalg.Vector
 
 /**
- * Created by sarangis on 7/11/15.
+ * Created by sarangis on 7/21/15.
  */
-
-trait Classifier[ModelType, TrainingDataType] {
-  def train(training_data: TrainingDataType, initial_theta: VectorD): ModelType
+class HypothesisFunctionsTest extends FunSuite {
+  test("RegressionHypothesisFunction works correctly") {
+    assert(HypothesisFunctions.RegressionHypothesisFunction(Vector[Double](1, 2, 3), Vector[Double](4, 5, 6)) == 32)
+  }
 }

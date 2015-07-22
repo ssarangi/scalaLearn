@@ -23,14 +23,14 @@
  *
  */
 
-package ml.Classifier
+package ml.TrainingData
 
-import linalg.LinAlgTypes.VectorD
+import linalg.LinAlgTypes.{MatrixD, VectorD}
 
 /**
- * Created by sarangis on 7/11/15.
+ * Created by sarangis on 7/21/15.
  */
-
-trait Classifier[ModelType, TrainingDataType] {
-  def train(training_data: TrainingDataType, initial_theta: VectorD): ModelType
+class RegressionTrainingData(val y: VectorD, val x: MatrixD) extends BaseTrainingData {
+  override val length = y.length
+  override val variables = x.cols
 }

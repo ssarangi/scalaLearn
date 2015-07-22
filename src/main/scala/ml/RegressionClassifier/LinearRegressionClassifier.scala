@@ -27,18 +27,35 @@ package ml.RegressionClassifier
 
 import linalg.LinAlgTypes.{MatrixD, VectorD}
 import linalg.{Vector, Matrix}
-import ml.HypothesisFunctions.CostFunctions.linear_regression_hypothesis_func
+import ml.Classifier.Classifier
+import ml.HypothesisFunctions.HypothesisFunctions._
+import ml.Optimizer.{Updater, LeastSquaresGradient, GradientDescent}
+import ml.TrainingData.RegressionTrainingData
+import ml.Optimizer.Updater._
 
 /**
  * Created by sarangis on 7/11/15.
  */
 
-object LinearRegressionClassifier
-  extends RegressionClassifier {
+class LinearRegressionClassifier(private val learning_rate: Double,
+                                 private val convergence_tol: Double,
+                                 private val max_iterations: Int)
+  extends Classifier[LinearRegressionModel, RegressionTrainingData] {
 
-  def fit_model(training_data: MatrixD, initial_theta: VectorD, learning_rate: Double, threshold: Double, max_iterations: Int): LinearRegressionModel = {
-    val augmented_training_data = training_data.insert_col(1, Vector(List.fill[Double](training_data.rows)(1.0)))
-    super.fit_model(linear_regression_hypothesis_func, augmented_training_data, initial_theta, learning_rate, threshold, max_iterations)
+  private val gradientDescent = new GradientDescent(regressionHypothesisFunctor)
+                                .setGradientFunc(new LeastSquaresGradient(regressionHypothesisFunctor))
+                                .setUpdaterFunc(simpleUpdaterFunctor)
+                                .setConverganceTol(convergence_tol)
+                                .setLearningRate(learning_rate)
+                                .setMaxIterations(max_iterations)
+
+  def train(training_data: RegressionTrainingData, initial_theta: VectorD): LinearRegressionModel = {
+    // Check the training data. If the number of variables is less than the number of theta parameters then that means
+    // the data wasn't augmented with the 1's for Theta0
+    require(initial_theta.length == training_data.variables,
+            "Number of variables should be equal to the number of coefficient's passed." +
+            " Did you forget to initialize x0 to 1's")
+
+    new LinearRegressionModel(gradientDescent.run(training_data, initial_theta))
   }
-
 }

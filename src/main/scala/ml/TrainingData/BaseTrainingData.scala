@@ -23,14 +23,12 @@
  *
  */
 
-package ml.Classifier
-
-import linalg.LinAlgTypes.VectorD
+package ml.TrainingData
 
 /**
- * Created by sarangis on 7/11/15.
+ * Created by sarangis on 7/21/15.
  */
-
-trait Classifier[ModelType, TrainingDataType] {
-  def train(training_data: TrainingDataType, initial_theta: VectorD): ModelType
+abstract class BaseTrainingData {
+  val length: Int
+  val variables: Int
 }
