@@ -23,11 +23,22 @@
  *
  */
 
-package nlp.metrics
+package nlp.tokenize
+
+import org.scalatest.FunSuite
 
 /**
- * Created by sarangis on 7/21/15.
+ * Created by sarangis on 7/23/15.
  */
-object Distance {
+class Regexp$Test extends FunSuite {
+
+  test("testFormatRegex works correctly") {
+    println(RegExp.formatRegex("a+(b*c)"))
+    assert(RegExp.formatRegex("a+(b*c)") == "a+.(b*.c)")
+  }
+
+  test("testInfix2postfix") {
+
+  }
 
 }

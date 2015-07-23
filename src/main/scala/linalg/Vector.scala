@@ -66,9 +66,9 @@ object Vector {
 
   private class VectorImpl[@specialized(Double, Int, Float, Long)T](val _data: List[T])
     extends Vector[T] {
-    def +(that: Vector[T])(implicit ev: Numeric[T]): Vector[T] = new VectorImpl[T](_data.zip(that).map(elem => elem._1 + elem._2))
-    def -(that: Vector[T])(implicit ev: Numeric[T]): Vector[T] = new VectorImpl[T](_data.zip(that).map(elem => elem._1 - elem._2))
-    def *(that: Vector[T])(implicit ev: Numeric[T]): Vector[T] = new VectorImpl[T](_data.zip(that).map(elem => elem._1 * elem._2))
+    def +(that: Vector[T])(implicit ev: Numeric[T]): Vector[T] = new VectorImpl[T](_data.zip(that).par.map(elem => elem._1 + elem._2).toList)
+    def -(that: Vector[T])(implicit ev: Numeric[T]): Vector[T] = new VectorImpl[T](_data.zip(that).par.map(elem => elem._1 - elem._2).toList)
+    def *(that: Vector[T])(implicit ev: Numeric[T]): Vector[T] = new VectorImpl[T](_data.zip(that).par.map(elem => elem._1 * elem._2).toList)
     def *(that: T)(implicit ev: Numeric[T]): Vector[T] = new VectorImpl[T](List.fill(_data.length)(that)) * this
 
     def dot(that: Vector[T])(implicit ev: Numeric[T]): T = this._data.zip(that).map(el => el._1 * el._2).reduceLeft(_ + _)

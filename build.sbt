@@ -17,11 +17,12 @@ ScoverageSbtPlugin.ScoverageKeys.coverageHighlighting := {
     else false
 }
 
-import org.scoverage.coveralls.Imports.CoverallsKeys._
-coverallsToken := Some("m3oDoQnVjlpEVVfWJjEUpV5PgToq0TZDn")
+// import org.scoverage.coveralls.Imports.CoverallsKeys._
+// coverallsToken := Some("m3oDoQnVjlpEVVfWJjEUpV5PgToq0TZDn")
 
 libraryDependencies  ++= Seq(
   // other dependencies here
+  "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.2",
   "org.scalatest" % "scalatest_2.11" % "2.2.4" % "test",
   "com.typesafe.akka" %% "akka-actor" % "2.3.12",
   "org.scalanlp" %% "breeze" % "0.11.2",
