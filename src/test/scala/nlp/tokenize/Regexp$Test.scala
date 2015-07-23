@@ -33,7 +33,6 @@ import org.scalatest.FunSuite
 class Regexp$Test extends FunSuite {
 
   test("testFormatRegex works correctly") {
-    println(RegExp.formatRegex("a+(b*c)"))
     assert(RegExp.formatRegex("a+(b*c)") == "a+.(b*.c)")
   }
 
