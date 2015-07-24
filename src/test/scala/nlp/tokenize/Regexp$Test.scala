@@ -37,7 +37,8 @@ class Regexp$Test extends FunSuite {
   }
 
   test("testInfix2postfix") {
-    assert(RegExp.infix2postfix("a+(b*c)") == "abc*+")
+    assert(RegExp.infix2postfix("5+((1+2)*4)-3", true) == "512+4*+3-")
+    assert(RegExp.infix2postfix("3+4*2/(1-5)^2^3", true) == "342*15-23^^/+")
   }
 
 }

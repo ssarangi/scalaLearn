@@ -33,7 +33,7 @@ import nlp.tokenize.RegExp
 object scalaLearnApp extends App {
   def main(): Unit = {
     // LinearRegressionExample.MultiVariableExample()
-    RegExp.infix2postfix("a+(b*c)")
+    println(RegExp.infix2postfix("3+4*2/(1-5)^2^3", true))
   }
 
   main()

@@ -168,22 +168,39 @@ package nlp.tokenize
 
 import scala.annotation.tailrec
 import scala.collection.mutable
+import scala.util.control.Breaks._
+import scala.math.abs
 
 object RegExp {
 
-  val OpPrecedence = Map({'(' -> 1},
-                         {'|' -> 2},
-                         {'.' -> 3},
-                         {'?' -> 4},
-                         {'*' -> 4},
-                         {'+' -> 4},
-                         {'^' -> 5})
+  val RegexOpPrecedence = Map({'(' -> 1},
+                              {'|' -> 2},
+                              {'.' -> 3},
+                              {'?' -> 4},
+                              {'*' -> 4},
+                              {'+' -> 4},
+                              {'^' -> 5})
 
-  def getPrecedence(c: Char): Int = {
-    OpPrecedence.getOrElse(c, 6)
+  // Arithmetic Operator Precedence. Kept for testing purposes.
+  val ArithOpPrecedence = Map({ '^' -> -4 },
+                              { '(' -> 0 },
+                              { '/' -> 3 },
+                              { '*' -> 3 },
+                              { '+' -> 2 },
+                              { '-' -> 2 })
+
+  def getPrecedence(c: Char, OpPrecedence: Map[Char, Int]): Int = {
+    val prec = OpPrecedence.getOrElse(c, 6)
+    abs(prec)
+  }
+
+  def getRightAssociativity(c: Char, OpPrecedence: Map[Char, Int]): Boolean = {
+    val prec = OpPrecedence.getOrElse(c, 6)
+    prec < 0
   }
 
   def formatRegex(regex: String): String = {
+
     /**
      * Turn a+(b*c) to a+.(b*.c)
      * @param regex
@@ -205,48 +222,51 @@ object RegExp {
     formatRegexInner(regex, "")
   }
 
+
   /**
    * Implement the Shunting-Yard algorithm
    * @param input
    * @return
    */
-  def infix2postfix(input: String): String = {
-    def infix2postfixInner(input: String, op_stack: mutable.Stack[Char], postfix_final: String): String = {
+  def infix2postfix(input: String, is_arith: Boolean): String = {
+    def infix2postfixInner(input: String, op_stack: mutable.Stack[Char], OpPrecedence: Map[Char, Int], postfix_final: String): String = {
       var postfix = postfix_final
       var stack = op_stack
+
+      if (input.isEmpty) return postfix + stack.toList.mkString
+
       val c = input.head
-      val next = if (input.tail.isEmpty) ' ' else input.tail.charAt(0)
 
-      if (input.isEmpty) {
-        var tmp = ""
-        while (stack.size > 0) tmp += stack.top
-        return postfix + tmp
-      }
-
-      var nres = postfix
       c match {
         case '(' => stack.push(c)
         case ')' => {
           val stack_elems_to_pop = stack.takeWhile(_ != '(')
-          val new_res = stack_elems_to_pop.toList.mkString
-          stack = stack.takeRight(stack_elems_to_pop.size + 1)
+          postfix += stack_elems_to_pop.toList.mkString
+          stack = stack.takeRight(stack.length - (stack_elems_to_pop.size + 1)) // + 1 is for the '(' itself. We want to remove it
         }
         case _ => {
-          while (stack.size > 0) {
-            val peekedChar = stack.top
-            val peekedCharPrecedence = getPrecedence(peekedChar)
-            val cPrecedence = getPrecedence(c)
-
-            if (peekedCharPrecedence >= cPrecedence)
-              postfix += stack.pop
-          }
+          val cPrecedence = getPrecedence(c, OpPrecedence)
+          val stack_to_take = stack.takeWhile(x => getPrecedence(x, OpPrecedence) >= cPrecedence && getRightAssociativity(x, OpPrecedence) == false)
+          postfix += stack_to_take.toList.mkString
+          stack = stack.takeRight(stack.length - stack_to_take.length)
+          stack.push(c)
         }
 
       }
 
-      infix2postfixInner(input.tail, stack, postfix)
+      infix2postfixInner(input.tail, stack, OpPrecedence, postfix)
     }
 
-    infix2postfix(formatRegex("a+(b*c)"))
+    // val formatted_regex = formatRegex("((a|b)*aba*)*(a|b)(a|b)")
+    // val formatted_regex = "3+4*2/(1-5)^2^3"
+    // val input = "5+((1+2)*4)-3"
+    // val formatted_regex = "a*(m+(b/c))-d"
+
+    val stack = new mutable.Stack[Char]
+
+    if (is_arith)
+      infix2postfixInner(input, stack, ArithOpPrecedence, "")
+    else
+      infix2postfixInner(input, stack, RegexOpPrecedence, "")
   }
 }
