@@ -167,7 +167,6 @@ package nlp.tokenize
 //}
 
 import scala.annotation.tailrec
-import scala.collection.mutable
 import scala.collection.mutable.{MutableList, Stack}
 import scala.math.abs
 
@@ -349,32 +348,5 @@ object RegExp {
     val e = stack.pop
     patch(e.out, matchState)
     e.start
-  }
-
-  // Global variables for NFA matching
-  val l1 = MutableList[Char]
-  val l2 = MutableList[Char]
-  var listId: Int
-
-  def addstate(l: MutableList, s: State): Unit = {
-    if (s == null || s.lastList == listId) return
-
-    s.lastList = listId
-    if (s.c == Split) {
-      addstate(l, s.out)
-      addstate(l, s.out1)
-    }
-
-    l.s[l]
-  }
-
-  def start_list(start: State, l: MutableList): MutableList = {
-    listId = listId + 1
-    addstate(l, start)
-    l
-  }
-
-  def match_nfa(state: State, s: Char): Boolean = {
-
   }
 }
