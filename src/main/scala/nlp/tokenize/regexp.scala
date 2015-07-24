@@ -168,7 +168,7 @@ package nlp.tokenize
 
 import scala.annotation.tailrec
 import scala.collection.mutable
-import scala.util.control.Breaks._
+import scala.collection.mutable.{MutableList, Stack}
 import scala.math.abs
 
 object RegExp {
@@ -224,13 +224,23 @@ object RegExp {
 
 
   /**
-   * Implement the Shunting-Yard algorithm
-   * @param input
+   * Implement the Shunting-Yard algorithm to convert a string from Infix form to Postfix form
+   * @param input: Input string
+   * @param is_arith: Boolean value indicating what operator precendence to use. This could be refactored to directly
+   *                pass in the Operator precedence Map.
    * @return
    */
   def infix2postfix(input: String, is_arith: Boolean): String = {
-    def infix2postfixInner(input: String, op_stack: mutable.Stack[Char], OpPrecedence: Map[Char, Int], postfix_final: String): String = {
-      var postfix = postfix_final
+    /**
+     * The inner recursive function which implements the infix to postfix conversion. Uses tail recursion.
+     * @param input: Input string
+     * @param op_stack: Stack to store the operators coming in/
+     * @param OpPrecedence: Precedence of operators. This varies between arithmetic, regular expressions and custom expressions.
+     * @param postfix_prev_iter: postfix result from previous iteration
+     * @return String: The postfix result from this iteration
+     */
+    def infix2postfixInner(input: String, op_stack: Stack[Char], OpPrecedence: Map[Char, Int], postfix_prev_iter: String): String = {
+      var postfix = postfix_prev_iter
       var stack = op_stack
 
       if (input.isEmpty) return postfix + stack.toList.mkString
@@ -262,11 +272,109 @@ object RegExp {
     // val input = "5+((1+2)*4)-3"
     // val formatted_regex = "a*(m+(b/c))-d"
 
-    val stack = new mutable.Stack[Char]
+    val stack = new Stack[Char]
 
     if (is_arith)
       infix2postfixInner(input, stack, ArithOpPrecedence, "")
     else
-      infix2postfixInner(input, stack, RegexOpPrecedence, "")
+      infix2postfixInner(formatRegex(input), stack, RegexOpPrecedence, "")
+  }
+
+  // Define the classes needed for conversion to NFA
+  case class State(var c: Int, var out: State, var out1: State, var lastList: Int) {
+    def this(c: Int) {
+      this(c, null, null, 0)
+    }
+
+    def this(c: Int, out: State, out1: State) {
+      this(c, null, null, 0)
+    }
+  }
+  class Frag(val start: State, val out: MutableList[State])
+
+  val Match = 256
+  val Split = 257
+
+  def postfix2NFA(input: String): State = {
+
+    /**
+     * Patch connects the dangling arrows in the pointer list l to the state s. It sets the outp = s for each pointer outp in l
+     * @param l
+     * @param s
+     */
+    def patch(l: MutableList[State], s: State): Unit = {
+      l.transform(x => s)
+    }
+
+    // Main implementation of the Postfix to NFA
+    val matchState = new State(Match)
+    val stack = new Stack[Frag]
+
+    input.foreach { x => x match {
+        case '.' => {
+          val e2 = stack.pop
+          val e1 = stack.pop
+          patch(e1.out, e2.start)
+          stack.push(new Frag(e1.start, e2.out))
+        }
+        case '|' => {
+          val e2 = stack.pop
+          val e1 = stack.pop
+          val s = new State(Split, e1.start, e2.start)
+          stack.push(new Frag(s, e1.out ++ e2.out))
+        }
+        case '?' => {
+          val e = stack.pop
+          val s = new State(Split, e.start, null)
+          stack.push(new Frag(s, e.out ++ MutableList(s.out1)))
+        }
+        case '*' => {
+          val e = stack.pop
+          val s = new State(Split, e.start, null)
+          stack.push(new Frag(s, MutableList(s.out1)))
+        }
+        case '+' => {
+          val e = stack.pop
+          val s = new State(Split, e.start, null)
+          patch(e.out, s)
+          stack.push(new Frag(e.start, MutableList(s.out1)))
+        }
+        case _ => {
+          val s = new State(11, null, null)
+          stack.push(new Frag(s, new MutableList[State]))
+        }
+      }
+    }
+
+    val e = stack.pop
+    patch(e.out, matchState)
+    e.start
+  }
+
+  // Global variables for NFA matching
+  val l1 = MutableList[Char]
+  val l2 = MutableList[Char]
+  var listId: Int
+
+  def addstate(l: MutableList, s: State): Unit = {
+    if (s == null || s.lastList == listId) return
+
+    s.lastList = listId
+    if (s.c == Split) {
+      addstate(l, s.out)
+      addstate(l, s.out1)
+    }
+
+    l.s[l]
+  }
+
+  def start_list(start: State, l: MutableList): MutableList = {
+    listId = listId + 1
+    addstate(l, start)
+    l
+  }
+
+  def match_nfa(state: State, s: Char): Boolean = {
+
   }
 }
