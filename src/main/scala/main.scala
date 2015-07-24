@@ -24,6 +24,7 @@
  */
 
 import ml.Example._
+import nlp.tokenize.RegExp
 
 /**
  * Created by sarangis on 7/12/15.
@@ -31,7 +32,8 @@ import ml.Example._
 
 object scalaLearnApp extends App {
   def main(): Unit = {
-    LinearRegressionExample.MultiVariableExample()
+    // LinearRegressionExample.MultiVariableExample()
+    RegExp.infix2postfix("a+(b*c)")
   }
 
   main()

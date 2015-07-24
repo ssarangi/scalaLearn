@@ -167,6 +167,7 @@ package nlp.tokenize
 //}
 
 import scala.annotation.tailrec
+import scala.collection.mutable
 
 object RegExp {
 
@@ -210,6 +211,42 @@ object RegExp {
    * @return
    */
   def infix2postfix(input: String): String = {
-    ""
+    def infix2postfixInner(input: String, op_stack: mutable.Stack[Char], postfix_final: String): String = {
+      var postfix = postfix_final
+      var stack = op_stack
+      val c = input.head
+      val next = if (input.tail.isEmpty) ' ' else input.tail.charAt(0)
+
+      if (input.isEmpty) {
+        var tmp = ""
+        while (stack.size > 0) tmp += stack.top
+        return postfix + tmp
+      }
+
+      var nres = postfix
+      c match {
+        case '(' => stack.push(c)
+        case ')' => {
+          val stack_elems_to_pop = stack.takeWhile(_ != '(')
+          val new_res = stack_elems_to_pop.toList.mkString
+          stack = stack.takeRight(stack_elems_to_pop.size + 1)
+        }
+        case _ => {
+          while (stack.size > 0) {
+            val peekedChar = stack.top
+            val peekedCharPrecedence = getPrecedence(peekedChar)
+            val cPrecedence = getPrecedence(c)
+
+            if (peekedCharPrecedence >= cPrecedence)
+              postfix += stack.pop
+          }
+        }
+
+      }
+
+      infix2postfixInner(input.tail, stack, postfix)
+    }
+
+    infix2postfix(formatRegex("a+(b*c)"))
   }
 }
