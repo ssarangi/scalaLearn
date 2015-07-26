@@ -41,8 +41,8 @@ object Regex {
 
   def compile(regex_string: String): Regex = {
     // Return a new instance of the Regex Class which can then be used to match
-    val formatted_regex = formatRegex(regex_string)
-    val postfix_regex = infix2postfix(formatted_regex, false)
+    // val formatted_regex = formatRegex(regex_string)
+    val postfix_regex = infix2postfix(regex_string, false)
     val postfix_tree = postfix2Tree(postfix_regex)
     val nfa = regex2NFA(postfix_tree)
     new RegexImpl(nfa)

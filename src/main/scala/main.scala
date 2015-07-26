@@ -31,17 +31,6 @@ import nlp.tokenize.Regex
 
 object scalaLearnApp extends App {
   def main(): Unit = {
-    // LinearRegressionExample.MultiVariableExample()
-//    val postfix = RegExp.infix2postfix("ab*|c+d", false)
-//    val postfix_tree = RegExp.postfix2Tree(postfix)
-//    val nfa = RegExp.regex2NFA(postfix_tree)
-//    val matches = RegExp.evaluateNFArecursive(nfa, "cccccccccccccccd")
-//    val matches1 = RegExp.evaluateNFAiterative(nfa, "abcccccccccccccccd")
-//    val a = 2
-//    val b = 3
-//    val c = a + b
-    val compiled_regex = Regex.compile("ab*|c+d")
-    val matches = compiled_regex.matches("cccccccccd")
   }
 
   main()
