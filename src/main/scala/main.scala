@@ -1,3 +1,5 @@
+import nlp.tokenize.Regex
+
 /*
  * The MIT License (MIT)
  *
@@ -23,8 +25,6 @@
  *
  */
 
-import nlp.tokenize.RegExp
-
 /**
  * Created by sarangis on 7/12/15.
  */
@@ -32,8 +32,16 @@ import nlp.tokenize.RegExp
 object scalaLearnApp extends App {
   def main(): Unit = {
     // LinearRegressionExample.MultiVariableExample()
-    println(RegExp.infix2postfix("3+4*2/(1-5)^2^3", true))
-    val st = RegExp.postfix2NFA("a+b.")
+//    val postfix = RegExp.infix2postfix("ab*|c+d", false)
+//    val postfix_tree = RegExp.postfix2Tree(postfix)
+//    val nfa = RegExp.regex2NFA(postfix_tree)
+//    val matches = RegExp.evaluateNFArecursive(nfa, "cccccccccccccccd")
+//    val matches1 = RegExp.evaluateNFAiterative(nfa, "abcccccccccccccccd")
+//    val a = 2
+//    val b = 3
+//    val c = a + b
+    val compiled_regex = Regex.compile("ab*|c+d")
+    val matches = compiled_regex.matches("cccccccccd")
   }
 
   main()
