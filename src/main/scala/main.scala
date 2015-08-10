@@ -1,3 +1,4 @@
+import akka.actor.{Props, ActorSystem}
 import nlp.tokenize.Regex
 
 /*
@@ -29,8 +30,33 @@ import nlp.tokenize.Regex
  * Created by sarangis on 7/12/15.
  */
 
+import nlp.models.{StartProcessFileMsg, WordCounterActor, TrigramModel}
+
+import akka.util.Timeout
+import scala.concurrent.duration._
+import akka.pattern.ask
+import akka.dispatch.ExecutionContexts._
+
+
 object scalaLearnApp extends App {
+  implicit val ec = global
+
   def main(): Unit = {
+    /*
+    val txt = "This is a test. Please do not disregard this message"
+    val trigram_model = new TrigramModel(txt)
+    println(trigram_model.model.mkString)
+    */
+
+    val filename = "/Volumes/Data/tmp/pg74.txt"
+    val system = ActorSystem("System")
+    val actor = system.actorOf(Props(new WordCounterActor(filename)))
+    implicit val timeout = Timeout(25 seconds)
+    val future = actor ? StartProcessFileMsg()
+    future.map { result =>
+      println("Total number of words: " + result)
+      system.shutdown
+    }
   }
 
   main()
